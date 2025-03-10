@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+</head>
+<body>
+    <pre id="etape"></pre>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var etape = document.getElementById("etape");
+            const params = new URLSearchParams(window.location.search);
+            const listeJSON = params.get("valeur");
+
+            console.log("Valeur brute de listeJSON:", listeJSON);  // Debugging
+
+            try {
+                const liste = JSON.parse(decodeURIComponent(listeJSON));
+                console.log("Liste après parsing:", liste);
+
+                if (!Array.isArray(liste)) {
+                    throw new Error("La valeur décodée n'est pas un tableau.");
+                }
+                
+                selectionMode(liste);
+            } catch (e) {
+                console.error("Erreur de parsing JSON:", e);
+            }
+
+            function selectionMode(numberList) {
+                etape.textContent += "Début du tri\n";
+
+                let n = numberList.length;
+                for (let i = 0; i < n - 1; i++) {
+                    let min = i;
+                    
+                    for (let j = i + 1; j < n; j++) {
+                        if (numberList[j] < numberList[min]) {
+                            min = j;
+                        }
+                    }
+                    
+                    if (min !== i) {
+                        [numberList[i], numberList[min]] = [numberList[min], numberList[i]];
+                    }
+
+                    etape.textContent += `Étape ${i + 1}: ${numberList.join(", ")}\n`;
+                }
+
+                etape.textContent += "Tri terminé\n";
+            }
+        });
+
+
+    </script>
+    
+    
+    
+</body>
+</html>
