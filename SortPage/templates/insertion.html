@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/sort.css') }}">
+    <title>Insertion Mode</title>
+</head>
+<body>
+    <div id="container"><pre id="etape"></pre></div>
+    
+    <div class="grid-container">
+        <div class="plane">
+            <div class="grid"></div>
+            <div class="glow"></div>
+        </div>
+        <div class="plane">
+            <div class="grid"></div>
+            <div class="glow"></div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var etape = document.getElementById("etape");
+            const params = new URLSearchParams(window.location.search);
+            const listeJSON = params.get("valeur");
+
+            console.log("Valeur brute de listeJSON:", listeJSON);  // Debugging
+
+            try {
+                const liste = JSON.parse(decodeURIComponent(listeJSON));
+                console.log("Liste après parsing:", liste);
+
+                if (!Array.isArray(liste)) {
+                    throw new Error("La valeur décodée n'est pas un tableau.");
+                }
+                
+                insertionMode(liste);
+            } catch (e) {
+                console.error("Erreur de parsing JSON:", e);
+            }
+
+            function insertionMode(numberList) {
+                let NbrEtape = 0;
+                let etape = document.getElementById("etape");
+                etape.textContent += "Début du tri\n";
+
+                for (let i = 1; i < numberList.length; i++) {
+                    let x = numberList[i];
+                    let j = i;
+                    
+                    while (j > 0 && numberList[j - 1] > x) {
+                        numberList[j] = numberList[j - 1];
+                        j--;
+                        etape.textContent += "Étape"+NbrEtape+": ";
+                        
+                        etape.textContent += numberList.join(", ") + "\n"; // Affichage après chaque déplacement
+                        NbrEtape++;
+                    }
+                    
+                    numberList[j] = x;
+                    etape.textContent += "Étape"+NbrEtape+": ";
+                    
+                    etape.textContent += numberList.join(", ") + "\n"; // Affichage après insertion
+                    NbrEtape++;
+                }
+                
+                etape.textContent += "Tri terminé\n";
+                NbrEtape = 0;
+            }
+
+        });
+    </script>
+
+    
+</body>
+</html>
